@@ -175,48 +175,29 @@ function simplifyIndex() {
 title: "Welcome"
 description: "Your new website"
 permalink: "/"
-tags: "sitemap"
+tags: "sitemap" # content/content.json will make sure that all pages in content/ are marked with a "sitemap" tag, for automatic sitemap generation. As index.html is not in content/, we need to add it here to ensure the root page is included in the sitemap generation
 ---
 
 {% extends "layouts/base.html" %}
 
 {% block head %}
-    <style>
-        #welcome {
-            padding: 100px 16px;
-        }
-        #welcome .cs-container {
-            max-width: 1280px;
-            margin: 0 auto;
-        }
-        #welcome .cs-content {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-        }
-        #welcome h1 {
-            margin-bottom: 24px;
-            font-size: clamp(2rem, 5vw, 3rem);
-        }
-        #welcome p {
-            margin-bottom: 16px;
-            font-size: 1.125rem;
-            line-height: 1.6;
-        }
-        #welcome code {
-            padding: 2px 8px;
-            background: #f4f4f4;
-            border-radius: 4px;
-            font-family: monospace;
-        }
-        #welcome a {
-            color: var(--primary);
-            text-decoration: underline;
-        }
-        #welcome a:hover {
-            opacity: 0.8;
-        }
-    </style>
+    <!-- Critical styles are loaded first -->
+    <link rel="stylesheet" href="/assets/css/critical.css"/>
+
+    <!-- If we're in production, defer the rest of the home page styles. In development, always load it. Otherwise the site will break when hot-reload is used. -->
+    {% if client.isProduction %}
+        <link rel="preload" href="/assets/css/local.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript>
+            <link rel="stylesheet" href="/assets/css/local.css">
+        </noscript>
+
+    {% else %}
+        <link rel="stylesheet" href="/assets/css/local.css"/>
+    {% endif %}
+
+    <!-- To ensure proper validation, prevent errors, and encourage developers to check, schema's are an opt-in feature. They're very bespoke and requires some customising  -->
+    <!-- Uncomment the code below to enable Structured Data, and test it when you deploy to Netlify - https://developers.google.com/search/docs/appearance/structured-data -->
+    <!-- {% include "components/home-schema.html" %} -->
 {% endblock %}
 
 {% block body %}
@@ -242,6 +223,76 @@ tags: "sitemap"
 
 	fs.writeFileSync(indexPath, content, "utf8");
 	console.log("Simplified src/index.html");
+}
+
+// ─── Simplify Critical LESS ──────────────────────────────────────────────────
+
+function simplifyCriticalLess() {
+	console.log("\n--- Simplifying critical.less ---\n");
+	const criticalPath = resolvePath("src/assets/less/critical.less");
+
+	const content = `// ─────────────────────────────────────────────────────────────────────────────
+// CRITICAL PAGE STYLES
+// Above-the-fold and high-priority styles for the home page's landing section.
+// Put the first section of the home page in here, so it loads immediately.
+// The rest of the home page styles in local.css will be deferred and
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Demo styles - Delete me!
+#welcome {
+    padding: 100px 16px;
+
+    .cs-container {
+        max-width: 1280px;
+        margin: 0 auto;
+    }
+
+    .cs-content {
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    h1 {
+        margin-bottom: 24px;
+        font-size: clamp(2rem, 5vw, 3rem);
+    }
+
+    p {
+        margin-bottom: 16px;
+        font-size: 1.125rem;
+        line-height: 1.6;
+    }
+
+    code {
+        padding: 2px 8px;
+        background: #f4f4f4;
+        border-radius: 4px;
+        font-family: monospace;
+    }
+
+    a {
+        color: var(--primary);
+        text-decoration: underline;
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+}
+`;
+
+	fs.writeFileSync(criticalPath, content, "utf8");
+	console.log("Simplified src/assets/less/critical.less");
+}
+
+// ─── Clear Local LESS ────────────────────────────────────────────────────────
+
+function clearLocalLess() {
+	console.log("\n--- Clearing local.less ---\n");
+	const localPath = resolvePath("src/assets/less/local.less");
+	fs.writeFileSync(localPath, "", "utf8");
+	console.log("Cleared src/assets/less/local.less");
 }
 
 // ─── Update Header ───────────────────────────────────────────────────────────
@@ -339,6 +390,8 @@ async function main() {
 
 	// Update files
 	simplifyIndex();
+	simplifyCriticalLess();
+	clearLocalLess();
 	updateHeader();
 	updateFooter();
 
