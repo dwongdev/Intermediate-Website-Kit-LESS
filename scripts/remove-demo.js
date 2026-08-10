@@ -114,8 +114,7 @@ function moveDemoImages() {
 	console.log("\n--- Moving demo images ---\n");
 	const dest = path.join(destinationDir, "images-demo");
 
-	// Note: cabinets.jpg is kept because blog templates (post.html, blog.html) use it as a banner image.
-	// It will be moved when remove-decap is run with blog removal.
+	// Note: cabinets.jpg is kept because it's used across the site
 	const images = ["landing.jpg", "construction.jpg"];
 	let count = 0;
 
