@@ -4,17 +4,16 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <!-- Babel - specifically version 7 -->
         <script src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script>
 
         <title>Content Manager</title>
     </head>
 
     <body>
-        <!-- Decap Script -->
+        <!-- First - Render Decap script to expose tools to build previews -->
         <script src="https://unpkg.com/decap-cms@3.15.1/dist/decap-cms.js"></script>
 
-        <!-- Render CMS customizations as a React component -->
+        <!-- Second - Use Decap's API to render custom previews for collections in React syntax enabled by Babel -->
         <script type="text/babel" src="/admin/previews.jsx"></script>
     </body>
 
