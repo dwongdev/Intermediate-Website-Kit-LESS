@@ -164,7 +164,7 @@ This documentation will explain all the files and directories in the starter kit
 │   ├── admin/
 │   │   ├── config.yml
 │   │   ├── index.html
-│   │   └── previews.jsx
+│   │   └── preview.jsx
 │   ├── assets/
 │   │   ├── favicons/
 │   │   ├── fonts/
@@ -301,17 +301,17 @@ Styling the Decap preview pane This template includes custom styles for the Deca
 
 1. How it works:
 
-The preview styles are pulled from the same styles that are defined in your production styles, so make sure that you keep the JSX in sync for a true "live editing" experience. The CMS preview script can be found in in /admin/previews.jsx:
+The preview styles are pulled from the same styles that are defined in your production styles, so make sure that you keep the JSX in sync for a true "live editing" experience. The CMS preview script can be found in in /admin/preview.jsx:
 
 - pulls the props from the collection
 - creates the DOM elements
 - registers these elements and styles for the preview panel to use
 
-The templates are written in JSX and compiled in the browser by @babel/standalone, which /admin/index.html loads before it loads previews.jsx. Keep them in their own .jsx file rather than inlining them in index.html to prevent formatters as treating them as HTML.
+The templates are written in JSX and compiled in the browser by @babel/standalone, which /admin/index.html loads before it loads preview.jsx. Keep them in their own .jsx file rather than inlining them in index.html to prevent formatters as treating them as HTML.
 
 2. How to update or customize:
 
-Edit /admin/previews.jsx to match your site's branding or layout changes. Use Decap's documentation on [customizing the preview pane](https://decapcms.org/docs/customization/)
+Edit /admin/preview.jsx to match your site's branding or layout changes. Use Decap's documentation on [customizing the preview pane](https://decapcms.org/docs/customization/)
 
 3.Notes
 
